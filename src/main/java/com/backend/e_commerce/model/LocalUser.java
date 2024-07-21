@@ -1,5 +1,6 @@
 package com.backend.e_commerce.model;
 
+import com.auth0.jwt.interfaces.Verification;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -27,6 +28,10 @@ public class LocalUser {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Address> address = new ArrayList<>();
 
+    @OrderBy("id desc")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VerificationToken> verificationTokens = new ArrayList<>();
+
     @Column(name = "username", nullable = false, unique = true)
     private String username;
     @JsonIgnore
@@ -38,18 +43,18 @@ public class LocalUser {
     private  String firstName;
     @Column(name = "last_name", nullable = false)
     private String lastName;
+    @Column(name = "email_verified", nullable = false)
+    private Boolean isEmailVerified = false;
 
-    public String getPassword() {
-        return password;
-    }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+
 
     //Getter
     public Long getId(){
         return id;
+    }
+    public String getPassword() {
+        return password;
     }
     public String getUsername(){
         return username;
@@ -63,9 +68,20 @@ public class LocalUser {
     public String getEmail() {
         return email;
     }
+    public List<VerificationToken> getVerificationTokens() {
+        return verificationTokens;
+    }
+
+    public Boolean getIsEmailVerified() {
+        return isEmailVerified;
+    }
+
     //Setter
     public void setId(){
         this.id = id;
+    }
+    public void setPassword(String password) {
+        this.password = password;
     }
     public void  setUsername(String username){
         this.username = username;
@@ -78,5 +94,13 @@ public class LocalUser {
     }
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setIsEmailVerified(Boolean isEmailVerified) {
+        this.isEmailVerified = isEmailVerified;
+    }
+
+    public void setVerificationTokens(List<VerificationToken> verificationTokens) {
+        this.verificationTokens = verificationTokens;
     }
 }
